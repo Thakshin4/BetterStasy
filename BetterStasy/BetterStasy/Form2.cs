@@ -45,7 +45,45 @@ namespace BetterStasy
             this.Hide();
 
             Form1 f = new Form1();
-            f.ShowDialog();
+            f.ShowDialog();        
+
+            // Write Student to Database
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    string connectonString = @"Data Source=ML-RefVm-631348\\SQLEXPRESS;database=BetterStasy;Integrated Security = True";
+
+                    string query = "Insert Into Orders Values (@student_number,@student_firstname,@student_lastname,@student_password,@student_course, @student_modules, @student_rmodules, @student_group)";
+
+                    SqlConnection connecton = new SqlConnection(connectonString);
+
+                    connecton.Open();
+
+                    using (SqlCommand cmd = new SqlCommand(query, connecton))
+                    {
+                        cmd.Parameters.Add("@student_number", SqlDbType.Int).Value = student_number;
+                        cmd.Parameters.Add("@student_firstname", SqlDbType.Int).Value = student_firstname;
+                        cmd.Parameters.Add("@student_lastname", SqlDbType.Int).Value = student_lastname;
+                        cmd.Parameters.Add("@student_password", SqlDbType.Int).Value = student_password;
+                        cmd.Parameters.Add("@student_course", SqlDbType.Int).Value = course;
+                        cmd.Parameters.Add("@student_modules", SqlDbType.Int).Value = modules;
+                        cmd.Parameters.Add("@student_rmodules", SqlDbType.Int).Value = rmodules;                        
+                        cmd.Parameters.Add("@student_group", SqlDbType.Int).Value = group;
+                        
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(error.Message);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Registration Cancelled", "Cancel Registration", MessageBoxButtons.OK);
+            }
         }
 
         private void course_cmb_SelectedIndexChanged(object sender, EventArgs e)
